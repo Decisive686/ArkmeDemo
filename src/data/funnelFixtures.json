@@ -1,0 +1,702 @@
+[
+  {
+    "id": "math-class-prep",
+    "title": "碎碎念被聚合为候选安排组",
+    "inputText": "明天上数学课，课件还没准备，电动车还没充，好烦啊",
+    "expected": {
+      "memories": 0,
+      "emotions": 1,
+      "inspirations": 0,
+      "candidateArrangements": 1,
+      "formalArrangements": 0,
+      "mergeSuggestions": 0,
+      "arrangementGroups": 1,
+      "ignoredItems": 0,
+      "riskItems": 0
+    },
+    "result": {
+      "id": "funnel-math-class-prep",
+      "inputText": "明天上数学课，课件还没准备，电动车还没充，好烦啊",
+      "generatedAt": "2026-06-13T04:20:00.000Z",
+      "sourceRefs": [
+        {
+          "id": "src-math-raw",
+          "channel": "note",
+          "speaker": "我",
+          "text": "明天上数学课，课件还没准备，电动车还没充，好烦啊"
+        }
+      ],
+      "memories": [],
+      "emotions": [
+        {
+          "id": "emo-math-anxiety",
+          "kind": "emotion",
+          "title": "对明天课程准备感到烦躁",
+          "summary": "用户表达了准备事项堆在一起带来的烦躁感。",
+          "sourceRefs": [
+            {
+              "id": "src-math-raw",
+              "channel": "note",
+              "speaker": "我",
+              "text": "明天上数学课，课件还没准备，电动车还没充，好烦啊"
+            }
+          ],
+          "confidence": 0.92,
+          "reason": "“好烦啊”是明确情绪表达，应进入情绪承接，同时作为安排上下文。",
+          "emotion": "anxiety",
+          "intensity": "medium"
+        }
+      ],
+      "inspirations": [],
+      "candidateArrangements": [
+        {
+          "id": "arr-math-class",
+          "kind": "arrangement",
+          "title": "明天上数学课",
+          "summary": "明天要上数学课，课件和出行电量是前置准备。",
+          "sourceRefs": [
+            {
+              "id": "src-math-raw",
+              "channel": "note",
+              "speaker": "我",
+              "text": "明天上数学课，课件还没准备，电动车还没充，好烦啊"
+            }
+          ],
+          "confidence": 0.86,
+          "reason": "包含明确未来事项和准备缺口，但来自 AI 识别，默认候选安排。",
+          "lifecycle": "candidate",
+          "status": "pending",
+          "attention": "today",
+          "fields": {
+            "who": ["我"],
+            "what": "上数学课",
+            "whenText": "明天",
+            "whereText": "学校或上课地点",
+            "why": "已有课程安排",
+            "how": "先准备课件并给电动车充电",
+            "need": "提前准备，避免明天临时焦虑"
+          },
+          "executionMode": "user",
+          "prerequisiteItems": [
+            {
+              "id": "pre-math-courseware",
+              "title": "准备课件",
+              "sourceRefs": [
+                {
+                  "id": "src-math-raw",
+                  "channel": "note",
+                  "speaker": "我",
+                  "text": "课件还没准备"
+                }
+              ]
+            },
+            {
+              "id": "pre-math-bike-charge",
+              "title": "给电动车充电",
+              "sourceRefs": [
+                {
+                  "id": "src-math-raw",
+                  "channel": "note",
+                  "speaker": "我",
+                  "text": "电动车还没充"
+                }
+              ]
+            }
+          ],
+          "relatedEmotionIds": ["emo-math-anxiety"]
+        }
+      ],
+      "formalArrangements": [],
+      "mergeSuggestions": [],
+      "arrangementGroups": [
+        {
+          "id": "grp-math-class",
+          "title": "明天数学课准备",
+          "primaryArrangementId": "arr-math-class",
+          "relatedArrangementIds": [],
+          "prerequisiteItemIds": ["pre-math-courseware", "pre-math-bike-charge"],
+          "emotionalContextItemIds": ["emo-math-anxiety"],
+          "sourceRefs": [
+            {
+              "id": "src-math-raw",
+              "channel": "note",
+              "speaker": "我",
+              "text": "明天上数学课，课件还没准备，电动车还没充，好烦啊"
+            }
+          ],
+          "displayReason": "安排组只用于展示主安排、前置事项和情绪上下文的关系，不是第三种安排状态。"
+        }
+      ],
+      "ignoredItems": [],
+      "riskItems": []
+    }
+  },
+  {
+    "id": "harbin-longing-ticket",
+    "title": "高情绪未来动作进入候选安排",
+    "inputText": "我特别想你，想要明天买票去哈尔滨见你。",
+    "expected": {
+      "memories": 0,
+      "emotions": 1,
+      "inspirations": 0,
+      "candidateArrangements": 1,
+      "formalArrangements": 0,
+      "mergeSuggestions": 0,
+      "arrangementGroups": 0,
+      "ignoredItems": 0,
+      "riskItems": 0
+    },
+    "result": {
+      "id": "funnel-harbin-ticket",
+      "inputText": "我特别想你，想要明天买票去哈尔滨见你。",
+      "generatedAt": "2026-06-13T04:21:00.000Z",
+      "sourceRefs": [
+        {
+          "id": "src-harbin-raw",
+          "channel": "self",
+          "speaker": "我",
+          "text": "我特别想你，想要明天买票去哈尔滨见你。"
+        }
+      ],
+      "memories": [],
+      "emotions": [
+        {
+          "id": "emo-harbin-longing",
+          "kind": "emotion",
+          "title": "强烈想念对方",
+          "summary": "用户表达了强烈想念，并把情绪连接到一个未来行动。",
+          "sourceRefs": [
+            {
+              "id": "src-harbin-raw",
+              "channel": "self",
+              "speaker": "我",
+              "text": "我特别想你"
+            }
+          ],
+          "confidence": 0.95,
+          "reason": "“特别想你”是强情绪表达，应保留为情绪上下文。",
+          "emotion": "longing",
+          "intensity": "high"
+        }
+      ],
+      "inspirations": [],
+      "candidateArrangements": [
+        {
+          "id": "arr-harbin-ticket",
+          "kind": "arrangement",
+          "title": "明天考虑买票去哈尔滨见对方",
+          "summary": "用户表达了明天买票去哈尔滨见对方的意愿，但还没有确认购票。",
+          "sourceRefs": [
+            {
+              "id": "src-harbin-raw",
+              "channel": "self",
+              "speaker": "我",
+              "text": "想要明天买票去哈尔滨见你"
+            }
+          ],
+          "confidence": 0.72,
+          "reason": "有未来动作和意愿，但更像情绪驱动下的想法，不能直接转正式安排。",
+          "lifecycle": "candidate",
+          "status": "pending",
+          "attention": "recent",
+          "fields": {
+            "who": ["我", "对方"],
+            "what": "买票去哈尔滨见对方",
+            "whenText": "明天",
+            "whereText": "哈尔滨",
+            "why": "强烈想念对方",
+            "how": "先确认是否购票和行程",
+            "need": "保留这个意愿，但等待用户确认是否真的购票"
+          },
+          "executionMode": "user",
+          "prerequisiteItems": [],
+          "relatedEmotionIds": ["emo-harbin-longing"]
+        }
+      ],
+      "formalArrangements": [],
+      "mergeSuggestions": [],
+      "arrangementGroups": [],
+      "ignoredItems": [],
+      "riskItems": []
+    }
+  },
+  {
+    "id": "hangzhou-aggressive-language",
+    "title": "带时间地点的攻击表达进入风险分流",
+    "inputText": "我明天要到杭州揍扁你。",
+    "expected": {
+      "memories": 0,
+      "emotions": 1,
+      "inspirations": 0,
+      "candidateArrangements": 0,
+      "formalArrangements": 0,
+      "mergeSuggestions": 0,
+      "arrangementGroups": 0,
+      "ignoredItems": 0,
+      "riskItems": 1
+    },
+    "result": {
+      "id": "funnel-hangzhou-risk",
+      "inputText": "我明天要到杭州揍扁你。",
+      "generatedAt": "2026-06-13T04:22:00.000Z",
+      "sourceRefs": [
+        {
+          "id": "src-hangzhou-raw",
+          "channel": "private",
+          "speaker": "我",
+          "text": "我明天要到杭州揍扁你。"
+        }
+      ],
+      "memories": [],
+      "emotions": [
+        {
+          "id": "emo-hangzhou-anger",
+          "kind": "emotion",
+          "title": "强烈攻击性表达",
+          "summary": "文本包含愤怒或攻击性语气。",
+          "sourceRefs": [
+            {
+              "id": "src-hangzhou-raw",
+              "channel": "private",
+              "speaker": "我",
+              "text": "我明天要到杭州揍扁你。"
+            }
+          ],
+          "confidence": 0.78,
+          "reason": "攻击性词语应作为情绪或风险上下文处理。",
+          "emotion": "anger",
+          "intensity": "high"
+        }
+      ],
+      "inspirations": [],
+      "candidateArrangements": [],
+      "formalArrangements": [],
+      "mergeSuggestions": [],
+      "arrangementGroups": [],
+      "ignoredItems": [],
+      "riskItems": [
+        {
+          "id": "risk-hangzhou-aggression",
+          "kind": "risk",
+          "title": "不把攻击表达转成安排",
+          "summary": "虽然文本包含明天、杭州和动作，但安全判断不通过。",
+          "sourceRefs": [
+            {
+              "id": "src-hangzhou-raw",
+              "channel": "private",
+              "speaker": "我",
+              "text": "我明天要到杭州揍扁你。"
+            }
+          ],
+          "confidence": 0.9,
+          "reason": "语气/安全判断优先于 5W1H 抽取，不能生成正式安排。",
+          "riskType": "aggressiveLanguage",
+          "suggestedHandling": "doNotCreateArrangement"
+        }
+      ]
+    }
+  },
+  {
+    "id": "call-exposes-emotion",
+    "title": "观点进入灵感保留",
+    "inputText": "通话是暴露情绪。",
+    "expected": {
+      "memories": 0,
+      "emotions": 0,
+      "inspirations": 1,
+      "candidateArrangements": 0,
+      "formalArrangements": 0,
+      "mergeSuggestions": 0,
+      "arrangementGroups": 0,
+      "ignoredItems": 0,
+      "riskItems": 0
+    },
+    "result": {
+      "id": "funnel-call-insight",
+      "inputText": "通话是暴露情绪。",
+      "generatedAt": "2026-06-13T04:23:00.000Z",
+      "sourceRefs": [
+        {
+          "id": "src-call-raw",
+          "channel": "note",
+          "speaker": "我",
+          "text": "通话是暴露情绪。"
+        }
+      ],
+      "memories": [],
+      "emotions": [],
+      "inspirations": [
+        {
+          "id": "ins-call-emotion",
+          "kind": "inspiration",
+          "title": "通话会暴露情绪",
+          "summary": "这是一个关于沟通方式的判断或洞察。",
+          "sourceRefs": [
+            {
+              "id": "src-call-raw",
+              "channel": "note",
+              "speaker": "我",
+              "text": "通话是暴露情绪。"
+            }
+          ],
+          "confidence": 0.88,
+          "reason": "没有未来执行动作、承诺或未闭合事项，应进入灵感承接。",
+          "inspirationType": "insight"
+        }
+      ],
+      "candidateArrangements": [],
+      "formalArrangements": [],
+      "mergeSuggestions": [],
+      "arrangementGroups": [],
+      "ignoredItems": [],
+      "riskItems": []
+    }
+  },
+  {
+    "id": "hospital-multi-source",
+    "title": "医院事件多来源合并为一个候选安排",
+    "inputText": "我：后天去趟医院。爸爸：一定记得去医院，知道吗？我：好的，我已经有安排了。姐姐：你这个身体情况怎么办？我：我已经到医院挂号了。",
+    "expected": {
+      "memories": 1,
+      "emotions": 0,
+      "inspirations": 0,
+      "candidateArrangements": 1,
+      "formalArrangements": 0,
+      "mergeSuggestions": 1,
+      "arrangementGroups": 1,
+      "ignoredItems": 1,
+      "riskItems": 0
+    },
+    "result": {
+      "id": "funnel-hospital-merge",
+      "inputText": "我：后天去趟医院。爸爸：一定记得去医院，知道吗？我：好的，我已经有安排了。姐姐：你这个身体情况怎么办？我：我已经到医院挂号了。",
+      "generatedAt": "2026-06-13T04:24:00.000Z",
+      "sourceRefs": [
+        {
+          "id": "src-hospital-user-plan",
+          "channel": "self",
+          "speaker": "我",
+          "text": "后天去趟医院。"
+        },
+        {
+          "id": "src-hospital-father-reminder",
+          "channel": "private",
+          "speaker": "爸爸",
+          "text": "一定记得去医院，知道吗？"
+        },
+        {
+          "id": "src-hospital-user-confirm",
+          "channel": "private",
+          "speaker": "我",
+          "text": "好的，我已经有安排了。"
+        },
+        {
+          "id": "src-hospital-sister-care",
+          "channel": "private",
+          "speaker": "姐姐",
+          "text": "你这个身体情况怎么办？"
+        },
+        {
+          "id": "src-hospital-registration",
+          "channel": "private",
+          "speaker": "我",
+          "text": "我已经到医院挂号了。"
+        }
+      ],
+      "memories": [
+        {
+          "id": "mem-hospital-family-care",
+          "kind": "memory",
+          "title": "家人关注身体情况",
+          "summary": "父亲和姐姐都围绕身体情况和去医院进行提醒或关心。",
+          "sourceRefs": [
+            {
+              "id": "src-hospital-father-reminder",
+              "channel": "private",
+              "speaker": "爸爸",
+              "text": "一定记得去医院，知道吗？"
+            },
+            {
+              "id": "src-hospital-sister-care",
+              "channel": "private",
+              "speaker": "姐姐",
+              "text": "你这个身体情况怎么办？"
+            }
+          ],
+          "confidence": 0.86,
+          "reason": "家人的提醒和关心是关系上下文，应保留在详情中。",
+          "memoryType": "relationship"
+        }
+      ],
+      "emotions": [],
+      "inspirations": [],
+      "candidateArrangements": [
+        {
+          "id": "arr-hospital-check",
+          "kind": "arrangement",
+          "title": "后天去医院处理身体情况",
+          "summary": "多个来源都指向同一件去医院事项，且已有挂号进展。",
+          "sourceRefs": [
+            {
+              "id": "src-hospital-user-plan",
+              "channel": "self",
+              "speaker": "我",
+              "text": "后天去趟医院。"
+            },
+            {
+              "id": "src-hospital-father-reminder",
+              "channel": "private",
+              "speaker": "爸爸",
+              "text": "一定记得去医院，知道吗？"
+            },
+            {
+              "id": "src-hospital-user-confirm",
+              "channel": "private",
+              "speaker": "我",
+              "text": "好的，我已经有安排了。"
+            },
+            {
+              "id": "src-hospital-sister-care",
+              "channel": "private",
+              "speaker": "姐姐",
+              "text": "你这个身体情况怎么办？"
+            },
+            {
+              "id": "src-hospital-registration",
+              "channel": "private",
+              "speaker": "我",
+              "text": "我已经到医院挂号了。"
+            }
+          ],
+          "confidence": 0.91,
+          "reason": "去医院是用户相关、未来/未闭合且高价值的身体事项；多来源应合并为一个候选安排。",
+          "lifecycle": "candidate",
+          "status": "pending",
+          "attention": "recent",
+          "fields": {
+            "who": ["我", "爸爸", "姐姐"],
+            "what": "去医院处理身体情况",
+            "whenText": "后天",
+            "whereText": "医院",
+            "why": "身体情况需要处理，家人也在提醒和关心",
+            "how": "已经挂号，后续按挂号信息去医院",
+            "need": "不要重复生成安排，要把提醒、关心和挂号进展合并到一个事项"
+          },
+          "executionMode": "user",
+          "prerequisiteItems": [
+            {
+              "id": "pre-hospital-registration",
+              "title": "保留已挂号进展",
+              "sourceRefs": [
+                {
+                  "id": "src-hospital-registration",
+                  "channel": "private",
+                  "speaker": "我",
+                  "text": "我已经到医院挂号了。"
+                }
+              ]
+            }
+          ],
+          "relatedEmotionIds": []
+        }
+      ],
+      "formalArrangements": [],
+      "mergeSuggestions": [
+        {
+          "id": "merge-hospital-sources",
+          "action": "appendSourcesToExisting",
+          "title": "将医院相关来源合并到同一安排",
+          "targetArrangementId": "arr-hospital-check",
+          "candidateArrangementIds": ["arr-hospital-check"],
+          "sourceRefs": [
+            {
+              "id": "src-hospital-user-plan",
+              "channel": "self",
+              "speaker": "我",
+              "text": "后天去趟医院。"
+            },
+            {
+              "id": "src-hospital-father-reminder",
+              "channel": "private",
+              "speaker": "爸爸",
+              "text": "一定记得去医院，知道吗？"
+            },
+            {
+              "id": "src-hospital-sister-care",
+              "channel": "private",
+              "speaker": "姐姐",
+              "text": "你这个身体情况怎么办？"
+            },
+            {
+              "id": "src-hospital-registration",
+              "channel": "private",
+              "speaker": "我",
+              "text": "我已经到医院挂号了。"
+            }
+          ],
+          "confidence": 0.93,
+          "reason": "多个来源共享医院、身体情况和后天处理的语义，应合并而不是生成重复安排。"
+        }
+      ],
+      "arrangementGroups": [
+        {
+          "id": "grp-hospital",
+          "title": "医院身体情况事件",
+          "primaryArrangementId": "arr-hospital-check",
+          "relatedArrangementIds": [],
+          "prerequisiteItemIds": ["pre-hospital-registration"],
+          "emotionalContextItemIds": [],
+          "sourceRefs": [
+            {
+              "id": "src-hospital-user-plan",
+              "channel": "self",
+              "speaker": "我",
+              "text": "后天去趟医院。"
+            },
+            {
+              "id": "src-hospital-father-reminder",
+              "channel": "private",
+              "speaker": "爸爸",
+              "text": "一定记得去医院，知道吗？"
+            },
+            {
+              "id": "src-hospital-sister-care",
+              "channel": "private",
+              "speaker": "姐姐",
+              "text": "你这个身体情况怎么办？"
+            },
+            {
+              "id": "src-hospital-registration",
+              "channel": "private",
+              "speaker": "我",
+              "text": "我已经到医院挂号了。"
+            }
+          ],
+          "displayReason": "安排组解释这些对话为什么属于同一个医院事件，不参与生命周期判断。"
+        }
+      ],
+      "ignoredItems": [
+        {
+          "id": "ignored-hospital-confirm-duplicate",
+          "kind": "ignored",
+          "title": "不重复生成“我已经有安排了”",
+          "summary": "这句话是确认已有安排，不是新的安排。",
+          "sourceRefs": [
+            {
+              "id": "src-hospital-user-confirm",
+              "channel": "private",
+              "speaker": "我",
+              "text": "好的，我已经有安排了。"
+            }
+          ],
+          "confidence": 0.87,
+          "reason": "确认信号应用于合并和增强置信度，不应生成重复安排。",
+          "ignoredReason": "duplicateAfterMerge",
+          "canResurface": false
+        }
+      ],
+      "riskItems": []
+    }
+  },
+  {
+    "id": "manual-confirmed-dentist",
+    "title": "手动确认进入正式安排",
+    "inputText": "手动创建：周五下午三点去牙科复诊，记得提前带医保卡。",
+    "expected": {
+      "memories": 0,
+      "emotions": 0,
+      "inspirations": 0,
+      "candidateArrangements": 0,
+      "formalArrangements": 1,
+      "mergeSuggestions": 0,
+      "arrangementGroups": 1,
+      "ignoredItems": 0,
+      "riskItems": 0
+    },
+    "result": {
+      "id": "funnel-manual-dentist",
+      "inputText": "手动创建：周五下午三点去牙科复诊，记得提前带医保卡。",
+      "generatedAt": "2026-06-13T04:25:00.000Z",
+      "sourceRefs": [
+        {
+          "id": "src-dentist-manual",
+          "channel": "manual",
+          "speaker": "我",
+          "text": "手动创建：周五下午三点去牙科复诊，记得提前带医保卡。"
+        }
+      ],
+      "memories": [],
+      "emotions": [],
+      "inspirations": [],
+      "candidateArrangements": [],
+      "formalArrangements": [
+        {
+          "id": "arr-dentist-formal",
+          "kind": "arrangement",
+          "title": "周五下午三点去牙科复诊",
+          "summary": "用户手动创建并明确了时间和事项。",
+          "sourceRefs": [
+            {
+              "id": "src-dentist-manual",
+              "channel": "manual",
+              "speaker": "我",
+              "text": "手动创建：周五下午三点去牙科复诊，记得提前带医保卡。"
+            }
+          ],
+          "confidence": 1,
+          "reason": "手动创建代表用户已经确认，直接进入正式安排。",
+          "lifecycle": "formal",
+          "status": "pending",
+          "attention": "recent",
+          "fields": {
+            "who": ["我"],
+            "what": "去牙科复诊",
+            "whenText": "周五下午三点",
+            "whereText": "牙科",
+            "why": "复诊",
+            "how": "提前带医保卡",
+            "need": "明确执行并提醒前置物品"
+          },
+          "executionMode": "user",
+          "prerequisiteItems": [
+            {
+              "id": "pre-dentist-insurance-card",
+              "title": "带医保卡",
+              "sourceRefs": [
+                {
+                  "id": "src-dentist-manual",
+                  "channel": "manual",
+                  "speaker": "我",
+                  "text": "记得提前带医保卡"
+                }
+              ]
+            }
+          ],
+          "relatedEmotionIds": []
+        }
+      ],
+      "mergeSuggestions": [],
+      "arrangementGroups": [
+        {
+          "id": "grp-dentist",
+          "title": "牙科复诊准备",
+          "primaryArrangementId": "arr-dentist-formal",
+          "relatedArrangementIds": [],
+          "prerequisiteItemIds": ["pre-dentist-insurance-card"],
+          "emotionalContextItemIds": [],
+          "sourceRefs": [
+            {
+              "id": "src-dentist-manual",
+              "channel": "manual",
+              "speaker": "我",
+              "text": "手动创建：周五下午三点去牙科复诊，记得提前带医保卡。"
+            }
+          ],
+          "displayReason": "安排组展示正式安排和前置物品关系，不改变正式安排生命周期。"
+        }
+      ],
+      "ignoredItems": [],
+      "riskItems": []
+    }
+  }
+]

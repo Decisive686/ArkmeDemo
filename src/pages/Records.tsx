@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import ChatInput from "@/components/ChatInput";
 import ChatList from "@/components/ChatList";
 import EmptyState from "@/components/EmptyState";
@@ -19,6 +19,7 @@ type RecordsProps = {
   demoRecords?: RecordItem[];
   aiConversationEntries?: AiConversationEntry[];
   selfRecords?: RecordItem[];
+  composerAccessory?: ReactNode;
   onCreateSelfRecord?: (content: string) => void;
   onOpenSourceConversation?: (source: RecordSourceConversation) => void;
   onOpenRecordDetail?: (record: RecordItem) => void;
@@ -48,6 +49,7 @@ export default function Records({
   demoRecords,
   aiConversationEntries = [],
   selfRecords = [],
+  composerAccessory,
   onCreateSelfRecord,
   onOpenSourceConversation,
   onOpenRecordDetail,
@@ -192,6 +194,8 @@ export default function Records({
           />
         </div>
       )}
+
+      {showComposer && composerAccessory}
 
       {showComposer && (
         <ChatInput

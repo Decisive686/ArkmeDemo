@@ -1,5 +1,12 @@
 import React from "react";
 import {
+  getInitialArrangements,
+  getInitialArrangementApiSettings,
+  mergeAiRecognitionResultIntoArrangements,
+  persistArrangements,
+} from "@/data/arrangements";
+import { appendAiRecognitionRecord } from "@/data/aiRecognition";
+import {
   createTestGroup,
   createTestGroupMessage,
   createTestIdentity,
@@ -20,8 +27,11 @@ import {
   type TestIdentity,
   type TestMessage,
 } from "@/data/testConversations";
+import { resolveAnalyzeLifeStreamConfig } from "@/services/ai/aiConfig";
+import { analyzeLifeStream, type LifeStreamInput } from "@/services/ai/analyzeLifeStream";
 import { formatBubbleTime, formatTimeLabel } from "@/lib/time";
 import { cn } from "@/lib/utils";
+import type { RecordSourceConversation } from "@/types/record";
 
 const adminMessageModeStorageKey = "arkme-demo.adminMessageMode";
 
@@ -302,14 +312,16 @@ export default function AdminMessageConsole() {
   };
 
   const handleSendMessage = () => {
-    if (!activeIdentity || !messageText.trim()) return;
+    const trimmedText = messageText.trim();
+    if (!activeIdentity || !trimmedText) return;
     if (messageMode === "group" && !activeGroup) return;
 
+    const nextMessage =
+      messageMode === "group" && activeGroup
+        ? createTestGroupMessage(activeGroup.id, activeIdentity.id, trimmedText)
+        : createTestMessage(activeIdentity.id, trimmedText);
+
     setMessages((prev) => {
-      const nextMessage =
-        messageMode === "group" && activeGroup
-          ? createTestGroupMessage(activeGroup.id, activeIdentity.id, messageText)
-          : createTestMessage(activeIdentity.id, messageText);
       const nextMessages = [
         ...prev,
         nextMessage,
@@ -318,6 +330,55 @@ export default function AdminMessageConsole() {
       return nextMessages;
     });
     setMessageText("");
+
+    const sourceConversation: RecordSourceConversation = {
+      type: "test",
+      label:
+        messageMode === "group" && activeGroup
+          ? activeGroup.name
+          : activeIdentity.name,
+      actionLabel: "打开来源",
+      iconLabel:
+        messageMode === "group" && activeGroup
+          ? activeGroup.avatarLabel
+          : activeIdentity.avatarLabel,
+      conversationId: nextMessage.conversationId,
+      identityId: activeIdentity.id,
+      recordUid: nextMessage.id,
+    };
+
+    const input: LifeStreamInput = {
+      text: trimmedText,
+      channel: messageMode === "group" ? "group" : "private",
+      speaker: activeIdentity.name,
+      sourceLabel: sourceConversation.label,
+      occurredAt: new Date(nextMessage.sentAt).toISOString(),
+      recordUid: nextMessage.id,
+      conversationId: nextMessage.conversationId,
+      sourceConversation,
+    };
+
+    void (async () => {
+      const config = resolveAnalyzeLifeStreamConfig(getInitialArrangementApiSettings());
+      if (!config.aiEnabled) return;
+
+      const result = await analyzeLifeStream(input, config);
+      appendAiRecognitionRecord({
+        id: `ai-recognition-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        createdAt: Date.now(),
+        input,
+        result,
+      });
+
+      if (result.candidateArrangements.length === 0) return;
+
+      const nextArrangements = mergeAiRecognitionResultIntoArrangements(
+        getInitialArrangements(),
+        result,
+        sourceConversation
+      );
+      persistArrangements(nextArrangements);
+    })();
   };
 
   const handleMessageKeyDown = (

@@ -5,9 +5,29 @@ import ChatInput from "@/components/ChatInput";
 import ChatList from "@/components/ChatList";
 import RecordDetailSheet from "@/components/RecordDetailSheet";
 import RecordFullDetailScreen from "@/components/RecordFullDetailScreen";
+import {
+  ArrangementApiSettingsScreen,
+  ArrangementCenterScreen,
+  ArrangementDetailScreen,
+  ArrangementEditorSheet,
+  ArrangementEntry,
+} from "@/components/ArrangementExperience";
 import Records from "@/pages/Records";
 import { aiConversationLogEntries } from "@/data/aiConversationLog";
+import {
+  arrangementDraftFromRecord,
+  createArrangementItem,
+  getInitialArrangementApiSettings,
+  getInitialArrangements,
+  mergeAiRecognitionResultIntoArrangements,
+  persistArrangementApiSettings,
+  persistArrangements,
+  sortArrangements,
+} from "@/data/arrangements";
+import { appendAiRecognitionRecord } from "@/data/aiRecognition";
 import { useCandidateProfile } from "@/data/candidateProfile";
+import { resolveAnalyzeLifeStreamConfig } from "@/services/ai/aiConfig";
+import { analyzeLifeStream, type LifeStreamInput } from "@/services/ai/analyzeLifeStream";
 import {
   createTestReplyMessage,
   demoSenderIdentityId,
@@ -44,6 +64,11 @@ import {
   type ThemeMode,
 } from "@/settings/preferences";
 import type { PageType } from "@/App";
+import type {
+  ArrangementApiSettings,
+  ArrangementDraft,
+  ArrangementItem,
+} from "@/types/arrangement";
 import type { RecordItem, RecordReference, RecordSourceConversation } from "@/types/record";
 
 type HomeProps = {
@@ -104,6 +129,10 @@ type HomeMessagePreview = {
   message: TestMessage;
   unreadCount: number;
 };
+
+type ArrangementEditorState =
+  | { mode: "new"; draft: ArrangementDraft }
+  | { mode: "edit"; arrangement: ArrangementItem };
 
 const quickSearchTypes: QuickSearchType[] = [
   "image",
@@ -247,6 +276,39 @@ function makeRecordReference(record: RecordItem): RecordReference {
   };
 }
 
+function createManualArrangementDraft(): ArrangementDraft {
+  return {
+    title: "",
+    timeText: "",
+    location: "",
+    people: ["我"],
+    note: "",
+    status: "active",
+    focus: "recent",
+    source: {
+      type: "manual",
+      label: "手动创建",
+    },
+    confidence: undefined,
+    executionType: "user",
+  };
+}
+
+function draftFromArrangement(arrangement: ArrangementItem): ArrangementDraft {
+  return {
+    title: arrangement.title,
+    timeText: arrangement.timeText,
+    location: arrangement.location,
+    people: arrangement.people,
+    note: arrangement.note,
+    status: arrangement.status,
+    focus: arrangement.focus,
+    source: arrangement.source,
+    confidence: arrangement.confidence,
+    executionType: arrangement.executionType,
+  };
+}
+
 function getInitialSearchHistory() {
   if (typeof window === "undefined") {
     return [];
@@ -345,6 +407,19 @@ export default function Home({ currentPage, onNavigate }: HomeProps) {
   const [settingsView, setSettingsView] = React.useState<null | "settings" | "appearance" | "about">(
     null
   );
+  const [arrangementScreen, setArrangementScreen] =
+    React.useState<null | "list" | "detail" | "api">(null);
+  const [arrangementDetailId, setArrangementDetailId] = React.useState<string | null>(
+    null
+  );
+  const [arrangementDetailBack, setArrangementDetailBack] =
+    React.useState<"home" | "list">("home");
+  const [arrangementEditor, setArrangementEditor] =
+    React.useState<ArrangementEditorState | null>(null);
+  const [arrangements, setArrangements] = React.useState(getInitialArrangements);
+  const [arrangementApiSettings, setArrangementApiSettings] = React.useState(
+    getInitialArrangementApiSettings
+  );
   const [searchQuery, setSearchQuery] = React.useState("");
   const [searchHistory, setSearchHistory] = React.useState(getInitialSearchHistory);
   const [recordDetail, setRecordDetail] = React.useState<RecordItem | null>(null);
@@ -367,6 +442,16 @@ export default function Home({ currentPage, onNavigate }: HomeProps) {
   const unreadAiConversationCount = Math.max(
     0,
     aiConversationTotalCount - lastReadAiConversationCount
+  );
+  const sortedArrangements = React.useMemo(
+    () => sortArrangements(arrangements),
+    [arrangements]
+  );
+  const activeArrangement = React.useMemo(
+    () =>
+      sortedArrangements.find((arrangement) => arrangement.uid === arrangementDetailId) ??
+      null,
+    [arrangementDetailId, sortedArrangements]
   );
 
   React.useEffect(() => {
@@ -435,6 +520,113 @@ export default function Home({ currentPage, onNavigate }: HomeProps) {
       recordUid,
     }),
     [t]
+  );
+
+  const saveArrangements = React.useCallback(
+    (updater: (current: ArrangementItem[]) => ArrangementItem[]) => {
+      setArrangements((current) => {
+        const nextArrangements = updater(current);
+        persistArrangements(nextArrangements);
+        return nextArrangements;
+      });
+    },
+    []
+  );
+
+  const addArrangementFromDraft = React.useCallback(
+    (draft: ArrangementDraft) => {
+      const arrangement = createArrangementItem(draft);
+      saveArrangements((current) => sortArrangements([...current, arrangement]));
+      return arrangement;
+    },
+    [saveArrangements]
+  );
+
+  const patchArrangement = React.useCallback(
+    (uid: string, patch: Partial<ArrangementItem>) => {
+      saveArrangements((current) =>
+        sortArrangements(
+          current.map((arrangement) =>
+            arrangement.uid === uid
+              ? { ...arrangement, ...patch, updatedAt: Date.now() }
+              : arrangement
+          )
+        )
+      );
+    },
+    [saveArrangements]
+  );
+
+  const updateArrangement = React.useCallback(
+    (uid: string, draft: ArrangementDraft) => {
+      saveArrangements((current) =>
+        sortArrangements(
+          current.map((arrangement) =>
+            arrangement.uid === uid
+              ? { ...arrangement, ...draft, updatedAt: Date.now() }
+              : arrangement
+          )
+        )
+      );
+    },
+    [saveArrangements]
+  );
+
+  const openArrangementDetail = React.useCallback(
+    (arrangement: ArrangementItem, back: "home" | "list" = "home") => {
+      setArrangementDetailBack(back);
+      setArrangementDetailId(arrangement.uid);
+      setArrangementScreen("detail");
+    },
+    []
+  );
+
+  const openManualArrangementEditor = React.useCallback(() => {
+    setArrangementEditor({ mode: "new", draft: createManualArrangementDraft() });
+  }, []);
+
+  const openArrangementEditorForRecord = React.useCallback((record: RecordItem) => {
+    setRecordDetail(null);
+    setRecordSnapshot(null);
+    setArrangementEditor({
+      mode: "new",
+      draft: arrangementDraftFromRecord(record),
+    });
+  }, []);
+
+  const saveArrangementApiSettings = React.useCallback(
+    (settings: ArrangementApiSettings) => {
+      setArrangementApiSettings(settings);
+      persistArrangementApiSettings(settings);
+      setArrangementScreen("list");
+    },
+    []
+  );
+
+  const analyzeAndStoreLifeStream = React.useCallback(
+    async (input: LifeStreamInput) => {
+      const config = resolveAnalyzeLifeStreamConfig(arrangementApiSettings);
+      if (!config.aiEnabled) return;
+
+      const result = await analyzeLifeStream(input, config);
+      appendAiRecognitionRecord({
+        id: `ai-recognition-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        createdAt: Date.now(),
+        input,
+        result,
+      });
+
+      if (result.candidateArrangements.length === 0) return;
+
+      saveArrangements((current) =>
+        mergeAiRecognitionResultIntoArrangements(
+          current,
+          result,
+          input.sourceConversation
+        )
+      );
+    },
+    [arrangementApiSettings, saveArrangements]
   );
 
   const demoRecords = React.useMemo<RecordItem[]>(
@@ -759,21 +951,28 @@ export default function Home({ currentPage, onNavigate }: HomeProps) {
 
   const createSelfRecord = React.useCallback((content: string) => {
     const timestamp = Date.now();
+    const newRecord: RecordItem = {
+      uid: `self-${timestamp}`,
+      text_content: content,
+      send_at: timestamp,
+      create_at: timestamp,
+      update_at: timestamp,
+    };
     setCreatedSelfRecords((prev) => {
-      const nextRecords = [
-        ...prev,
-        {
-          uid: `self-${timestamp}`,
-          text_content: content,
-          send_at: timestamp,
-          create_at: timestamp,
-          update_at: timestamp,
-        },
-      ];
+      const nextRecords = [...prev, newRecord];
       persistCreatedSelfRecords(nextRecords);
       return nextRecords;
     });
-  }, []);
+    void analyzeAndStoreLifeStream({
+      text: content,
+      channel: "self",
+      speaker: "我",
+      sourceLabel: t("sendToSelf.title"),
+      occurredAt: new Date(timestamp).toISOString(),
+      recordUid: newRecord.uid,
+      sourceConversation: makeSelfSource(newRecord.uid),
+    });
+  }, [analyzeAndStoreLifeStream, makeSelfSource, t]);
 
   const createRecordExtension = React.useCallback((parentRecord: RecordItem, content: string) => {
     const timestamp = Date.now();
@@ -1023,20 +1222,38 @@ export default function Home({ currentPage, onNavigate }: HomeProps) {
     );
   }, [homeMessagePreview, openTestConversation]);
 
-  const createTestReply = React.useCallback((summary: TestConversationSummary, content: string) => {
-    const reply = createTestReplyMessage(
-      summary.conversationId,
-      content,
-      summary.conversationType
-    );
-    setTestMessages((prev) => {
-      const nextMessages = [...prev, reply];
-      persistTestMessages(nextMessages);
-      return nextMessages;
-    });
-    markTestConversationAsRead(summary.conversationId);
-    setTestConversationTargetUid(`test-${reply.id}`);
-  }, [markTestConversationAsRead]);
+  const createTestReply = React.useCallback(
+    (summary: TestConversationSummary, content: string) => {
+      const reply = createTestReplyMessage(
+        summary.conversationId,
+        content,
+        summary.conversationType
+      );
+      setTestMessages((prev) => {
+        const nextMessages = [...prev, reply];
+        persistTestMessages(nextMessages);
+        return nextMessages;
+      });
+      markTestConversationAsRead(summary.conversationId);
+      setTestConversationTargetUid(`test-${reply.id}`);
+      void analyzeAndStoreLifeStream({
+        text: content,
+        channel: summary.conversationType === "group" ? "group" : "private",
+        speaker: "我",
+        sourceLabel: summary.title,
+        occurredAt: new Date(reply.sentAt).toISOString(),
+        recordUid: `test-${reply.id}`,
+        conversationId: summary.conversationId,
+        sourceConversation: makeTestSource(
+          summary.title,
+          summary.avatarLabel,
+          summary.conversationId,
+          `test-${reply.id}`
+        ),
+      });
+    },
+    [analyzeAndStoreLifeStream, makeTestSource, markTestConversationAsRead]
+  );
 
   const openSourceConversation = React.useCallback(
     (source: RecordSourceConversation) => {
@@ -1078,7 +1295,48 @@ export default function Home({ currentPage, onNavigate }: HomeProps) {
           extensionRecords={recordDetailExtensionRecords}
           onBack={() => setRecordDetail(null)}
           onCreateExtension={createRecordExtension}
+          onCreateArrangement={openArrangementEditorForRecord}
           onOpenSource={openSourceConversation}
+        />
+      );
+    }
+
+    if (arrangementScreen === "api") {
+      return (
+        <ArrangementApiSettingsScreen
+          settings={arrangementApiSettings}
+          onBack={() => setArrangementScreen("list")}
+          onSave={saveArrangementApiSettings}
+        />
+      );
+    }
+
+    if (arrangementScreen === "detail" && activeArrangement) {
+      return (
+        <ArrangementDetailScreen
+          arrangement={activeArrangement}
+          onBack={() => setArrangementScreen(arrangementDetailBack === "list" ? "list" : null)}
+          onEdit={(arrangement) => setArrangementEditor({ mode: "edit", arrangement })}
+          onOpenSource={(source) => {
+            if (source.conversation) {
+              openSourceConversation(source.conversation);
+            }
+          }}
+          onPatchArrangement={patchArrangement}
+        />
+      );
+    }
+
+    if (arrangementScreen === "list" || arrangementScreen === "detail") {
+      return (
+        <ArrangementCenterScreen
+          arrangements={sortedArrangements}
+          apiSettings={arrangementApiSettings}
+          onBack={() => setArrangementScreen(null)}
+          onOpenArrangement={(arrangement) => openArrangementDetail(arrangement, "list")}
+          onCreateArrangement={openManualArrangementEditor}
+          onOpenApiSettings={() => setArrangementScreen("api")}
+          onPatchArrangement={patchArrangement}
         />
       );
     }
@@ -1194,6 +1452,9 @@ export default function Home({ currentPage, onNavigate }: HomeProps) {
           demoRecords={[...demoRecords, ...testDemoReplyRecords]}
           aiConversationEntries={aiConversationLogEntries}
           selfRecords={selfRecords}
+          composerAccessory={
+            <ArrangementEntry onOpen={() => setArrangementScreen("list")} />
+          }
           onCreateSelfRecord={createSelfRecord}
           onOpenSourceConversation={openSourceConversation}
           onOpenRecordDetail={setRecordDetail}
@@ -1208,7 +1469,15 @@ export default function Home({ currentPage, onNavigate }: HomeProps) {
       mainPane={
         <div className="relative flex min-h-0 flex-1 flex-col">
           <main className="min-h-0 flex-1 overflow-hidden">{renderMainContent()}</main>
-          {!recordDetail && !showSearch && !showAnswerGuide && !showAiConversation && !showSendToSelf && !showTestConversation && !settingsView && (
+          {!recordDetail &&
+            !showSearch &&
+            !showAnswerGuide &&
+            !showAiConversation &&
+            !showSendToSelf &&
+            !showTestConversation &&
+            !settingsView &&
+            !arrangementScreen &&
+            !arrangementEditor && (
             <MobileBottomNavigation currentPage={currentPage} onNavigate={onNavigate} />
           )}
           <MobileSideDrawer
@@ -1234,8 +1503,32 @@ export default function Home({ currentPage, onNavigate }: HomeProps) {
           <RecordDetailSheet
             record={recordSnapshot}
             onClose={() => setRecordSnapshot(null)}
+            onCreateArrangement={openArrangementEditorForRecord}
             onOpenSource={openSourceConversation}
           />
+          {arrangementEditor && (
+            <ArrangementEditorSheet
+              initialDraft={
+                arrangementEditor.mode === "edit"
+                  ? draftFromArrangement(arrangementEditor.arrangement)
+                  : arrangementEditor.draft
+              }
+              title={arrangementEditor.mode === "edit" ? "编辑安排" : "创建安排"}
+              submitLabel={arrangementEditor.mode === "edit" ? "保存安排" : "创建安排"}
+              onClose={() => setArrangementEditor(null)}
+              onSubmit={(draft) => {
+                if (arrangementEditor.mode === "edit") {
+                  updateArrangement(arrangementEditor.arrangement.uid, draft);
+                } else {
+                  const arrangement = addArrangementFromDraft(draft);
+                  setArrangementDetailId(arrangement.uid);
+                  setArrangementDetailBack("list");
+                  setArrangementScreen("detail");
+                }
+                setArrangementEditor(null);
+              }}
+            />
+          )}
         </div>
       }
     />

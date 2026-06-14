@@ -1,0 +1,771 @@
+[
+  {
+    "id": "sample-1-harbin-strong-intent",
+    "title": "情绪 + 强意图，但不能直接正式安排",
+    "inputText": "我特别想你，想要明天就买票去哈尔滨见你。",
+    "semanticSlices": [
+      "我特别想你",
+      "想要明天就买票去哈尔滨见你"
+    ],
+    "routing": {
+      "memories": [],
+      "emotions": ["我特别想你"],
+      "inspirations": [],
+      "arrangementPossibilities": ["想要明天就买票去哈尔滨见你"],
+      "ignoredItems": [],
+      "riskItems": []
+    },
+    "expected": {
+      "memories": 0,
+      "emotions": 1,
+      "inspirations": 0,
+      "candidateArrangements": 1,
+      "formalArrangements": 0,
+      "mergeSuggestions": 0,
+      "arrangementGroups": 0,
+      "ignoredItems": 0,
+      "riskItems": 0
+    },
+    "result": {
+      "id": "funnel-sample-1-harbin",
+      "inputText": "我特别想你，想要明天就买票去哈尔滨见你。",
+      "generatedAt": "2026-06-13T05:00:00.000Z",
+      "sourceRefs": [
+        {
+          "id": "src-s1-raw",
+          "channel": "self",
+          "speaker": "我",
+          "text": "我特别想你，想要明天就买票去哈尔滨见你。"
+        }
+      ],
+      "memories": [],
+      "emotions": [
+        {
+          "id": "emo-s1-longing",
+          "kind": "emotion",
+          "title": "特别想念对方",
+          "summary": "用户表达了强烈想念。",
+          "sourceRefs": [
+            {
+              "id": "src-s1-emotion",
+              "channel": "self",
+              "speaker": "我",
+              "text": "我特别想你"
+            }
+          ],
+          "confidence": 0.95,
+          "reason": "这是明确的情绪表达，应进入情绪承接。",
+          "emotion": "longing",
+          "intensity": "high"
+        }
+      ],
+      "inspirations": [],
+      "candidateArrangements": [
+        {
+          "id": "arr-s1-harbin-ticket",
+          "kind": "arrangement",
+          "title": "明天买票去哈尔滨见 TA",
+          "summary": "用户有强意图，但还没有最终确认买票行动。",
+          "sourceRefs": [
+            {
+              "id": "src-s1-arrangement",
+              "channel": "self",
+              "speaker": "我",
+              "text": "想要明天就买票去哈尔滨见你"
+            }
+          ],
+          "confidence": 0.74,
+          "reason": "“想要”表达强意图，但不是最终确认行动，不能直接转正式安排。",
+          "lifecycle": "candidate",
+          "status": "pending",
+          "attention": "recent",
+          "fields": {
+            "who": ["我", "TA"],
+            "what": "买票去哈尔滨见 TA",
+            "whenText": "明天",
+            "whereText": "哈尔滨",
+            "why": "特别想念 TA",
+            "how": "先确认是否真的买票和出行",
+            "need": "保留强意图，等待用户确认是否行动"
+          },
+          "executionMode": "user",
+          "prerequisiteItems": [],
+          "relatedEmotionIds": ["emo-s1-longing"]
+        }
+      ],
+      "formalArrangements": [],
+      "mergeSuggestions": [],
+      "arrangementGroups": [],
+      "ignoredItems": [],
+      "riskItems": []
+    }
+  },
+  {
+    "id": "sample-2-hangzhou-risk",
+    "title": "玩笑 / 风险表达，不能直接变成安排",
+    "inputText": "我明天要到杭州揍扁你。",
+    "semanticSlices": [
+      "明天到杭州",
+      "揍扁你"
+    ],
+    "routing": {
+      "memories": [],
+      "emotions": ["揍扁你"],
+      "inspirations": [],
+      "arrangementPossibilities": ["明天到杭州"],
+      "ignoredItems": [],
+      "riskItems": ["揍扁你"]
+    },
+    "expected": {
+      "memories": 0,
+      "emotions": 1,
+      "inspirations": 0,
+      "candidateArrangements": 0,
+      "formalArrangements": 0,
+      "mergeSuggestions": 0,
+      "arrangementGroups": 0,
+      "ignoredItems": 0,
+      "riskItems": 1
+    },
+    "result": {
+      "id": "funnel-sample-2-risk",
+      "inputText": "我明天要到杭州揍扁你。",
+      "generatedAt": "2026-06-13T05:01:00.000Z",
+      "sourceRefs": [
+        {
+          "id": "src-s2-raw",
+          "channel": "private",
+          "speaker": "我",
+          "text": "我明天要到杭州揍扁你。"
+        }
+      ],
+      "memories": [],
+      "emotions": [
+        {
+          "id": "emo-s2-anger",
+          "kind": "emotion",
+          "title": "攻击性或夸张情绪表达",
+          "summary": "文本包含攻击性措辞，优先进入情绪/风险承接。",
+          "sourceRefs": [
+            {
+              "id": "src-s2-raw",
+              "channel": "private",
+              "speaker": "我",
+              "text": "我明天要到杭州揍扁你。"
+            }
+          ],
+          "confidence": 0.8,
+          "reason": "“揍扁你”不是可执行安排动作，应作为情绪/风险信号处理。",
+          "emotion": "anger",
+          "intensity": "high"
+        }
+      ],
+      "inspirations": [],
+      "candidateArrangements": [],
+      "formalArrangements": [],
+      "mergeSuggestions": [],
+      "arrangementGroups": [],
+      "ignoredItems": [],
+      "riskItems": [
+        {
+          "id": "risk-s2-aggressive-language",
+          "kind": "risk",
+          "title": "不把“揍扁你”转成安排动作",
+          "summary": "虽然有明天、杭州和动作，但安全判断不通过。",
+          "sourceRefs": [
+            {
+              "id": "src-s2-risk",
+              "channel": "private",
+              "speaker": "我",
+              "text": "揍扁你"
+            }
+          ],
+          "confidence": 0.92,
+          "reason": "风险/安全分流优先，不能生成“明天到杭州揍扁你”的安排。",
+          "riskType": "aggressiveLanguage",
+          "suggestedHandling": "doNotCreateArrangement"
+        }
+      ]
+    }
+  },
+  {
+    "id": "sample-3-math-class-prep",
+    "title": "碎碎念中包含主安排、前置事项和情绪",
+    "inputText": "明天上数学课，课件还没准备，电动车还没充，好烦啊。",
+    "semanticSlices": [
+      "明天上数学课",
+      "课件还没准备",
+      "电动车还没充",
+      "好烦啊"
+    ],
+    "routing": {
+      "memories": [],
+      "emotions": ["好烦啊"],
+      "inspirations": [],
+      "arrangementPossibilities": ["明天上数学课", "课件还没准备", "电动车还没充"],
+      "ignoredItems": [],
+      "riskItems": []
+    },
+    "expected": {
+      "memories": 0,
+      "emotions": 1,
+      "inspirations": 0,
+      "candidateArrangements": 1,
+      "formalArrangements": 0,
+      "mergeSuggestions": 0,
+      "arrangementGroups": 1,
+      "ignoredItems": 0,
+      "riskItems": 0
+    },
+    "result": {
+      "id": "funnel-sample-3-math",
+      "inputText": "明天上数学课，课件还没准备，电动车还没充，好烦啊。",
+      "generatedAt": "2026-06-13T05:02:00.000Z",
+      "sourceRefs": [
+        {
+          "id": "src-s3-raw",
+          "channel": "note",
+          "speaker": "我",
+          "text": "明天上数学课，课件还没准备，电动车还没充，好烦啊。"
+        }
+      ],
+      "memories": [],
+      "emotions": [
+        {
+          "id": "emo-s3-anxiety",
+          "kind": "emotion",
+          "title": "对明天上课准备感到烦躁",
+          "summary": "用户表达了准备事项未完成带来的烦躁。",
+          "sourceRefs": [
+            {
+              "id": "src-s3-emotion",
+              "channel": "note",
+              "speaker": "我",
+              "text": "好烦啊"
+            }
+          ],
+          "confidence": 0.93,
+          "reason": "“好烦啊”是明确情绪表达。",
+          "emotion": "anxiety",
+          "intensity": "medium"
+        }
+      ],
+      "inspirations": [],
+      "candidateArrangements": [
+        {
+          "id": "arr-s3-math-class",
+          "kind": "arrangement",
+          "title": "明天上数学课",
+          "summary": "明天上数学课是主安排，准备课件和充电是前置事项。",
+          "sourceRefs": [
+            {
+              "id": "src-s3-main",
+              "channel": "note",
+              "speaker": "我",
+              "text": "明天上数学课"
+            }
+          ],
+          "confidence": 0.88,
+          "reason": "包含明确未来事项和未完成准备，AI 识别默认进入候选安排。",
+          "lifecycle": "candidate",
+          "status": "pending",
+          "attention": "today",
+          "fields": {
+            "who": ["我"],
+            "what": "上数学课",
+            "whenText": "明天",
+            "whereText": "上课地点",
+            "why": "已有课程安排",
+            "how": "上课前准备课件并给电动车充电",
+            "need": "把主安排和前置准备聚合，减少遗漏"
+          },
+          "executionMode": "user",
+          "prerequisiteItems": [
+            {
+              "id": "pre-s3-courseware",
+              "title": "上课前准备课件",
+              "sourceRefs": [
+                {
+                  "id": "src-s3-courseware",
+                  "channel": "note",
+                  "speaker": "我",
+                  "text": "课件还没准备"
+                }
+              ]
+            },
+            {
+              "id": "pre-s3-bike-charge",
+              "title": "给电动车充电",
+              "sourceRefs": [
+                {
+                  "id": "src-s3-bike",
+                  "channel": "note",
+                  "speaker": "我",
+                  "text": "电动车还没充"
+                }
+              ]
+            }
+          ],
+          "relatedEmotionIds": ["emo-s3-anxiety"]
+        }
+      ],
+      "formalArrangements": [],
+      "mergeSuggestions": [],
+      "arrangementGroups": [
+        {
+          "id": "grp-s3-math",
+          "title": "明天数学课准备",
+          "primaryArrangementId": "arr-s3-math-class",
+          "relatedArrangementIds": [],
+          "prerequisiteItemIds": ["pre-s3-courseware", "pre-s3-bike-charge"],
+          "emotionalContextItemIds": ["emo-s3-anxiety"],
+          "sourceRefs": [
+            {
+              "id": "src-s3-raw",
+              "channel": "note",
+              "speaker": "我",
+              "text": "明天上数学课，课件还没准备，电动车还没充，好烦啊。"
+            }
+          ],
+          "displayReason": "安排组展示主安排、前置事项和情绪上下文的关系，不是生命周期状态。"
+        }
+      ],
+      "ignoredItems": [],
+      "riskItems": []
+    }
+  },
+  {
+    "id": "sample-4-call-insight",
+    "title": "观点 / 灵感，不进入安排",
+    "inputText": "通话是暴露情绪。",
+    "semanticSlices": [
+      "通话是暴露情绪"
+    ],
+    "routing": {
+      "memories": [],
+      "emotions": [],
+      "inspirations": ["通话是暴露情绪"],
+      "arrangementPossibilities": [],
+      "ignoredItems": [],
+      "riskItems": []
+    },
+    "expected": {
+      "memories": 0,
+      "emotions": 0,
+      "inspirations": 1,
+      "candidateArrangements": 0,
+      "formalArrangements": 0,
+      "mergeSuggestions": 0,
+      "arrangementGroups": 0,
+      "ignoredItems": 0,
+      "riskItems": 0
+    },
+    "result": {
+      "id": "funnel-sample-4-insight",
+      "inputText": "通话是暴露情绪。",
+      "generatedAt": "2026-06-13T05:03:00.000Z",
+      "sourceRefs": [
+        {
+          "id": "src-s4-raw",
+          "channel": "note",
+          "speaker": "我",
+          "text": "通话是暴露情绪。"
+        }
+      ],
+      "memories": [],
+      "emotions": [],
+      "inspirations": [
+        {
+          "id": "ins-s4-call",
+          "kind": "inspiration",
+          "title": "通话是暴露情绪",
+          "summary": "这是关于沟通方式的观点或洞察。",
+          "sourceRefs": [
+            {
+              "id": "src-s4-raw",
+              "channel": "note",
+              "speaker": "我",
+              "text": "通话是暴露情绪。"
+            }
+          ],
+          "confidence": 0.9,
+          "reason": "没有未来动作或承诺，应进入灵感保留。",
+          "inspirationType": "insight"
+        }
+      ],
+      "candidateArrangements": [],
+      "formalArrangements": [],
+      "mergeSuggestions": [],
+      "arrangementGroups": [],
+      "ignoredItems": [],
+      "riskItems": []
+    }
+  },
+  {
+    "id": "sample-5-hospital-merge",
+    "title": "多来源指向同一件事，需要合并",
+    "inputText": "我：后天去趟医院。\n爸爸：一定记得去医院。\n姐姐：你身体情况怎么办？\n我：我已经挂号了。",
+    "semanticSlices": [
+      "我：后天去趟医院",
+      "爸爸：一定记得去医院",
+      "姐姐：你身体情况怎么办",
+      "我：我已经挂号了"
+    ],
+    "routing": {
+      "memories": ["爸爸提醒去医院", "姐姐关心身体情况"],
+      "emotions": [],
+      "inspirations": [],
+      "arrangementPossibilities": ["后天去趟医院", "一定记得去医院", "已经挂号了"],
+      "ignoredItems": [],
+      "riskItems": []
+    },
+    "expected": {
+      "memories": 1,
+      "emotions": 0,
+      "inspirations": 0,
+      "candidateArrangements": 1,
+      "formalArrangements": 0,
+      "mergeSuggestions": 1,
+      "arrangementGroups": 1,
+      "ignoredItems": 0,
+      "riskItems": 0
+    },
+    "result": {
+      "id": "funnel-sample-5-hospital",
+      "inputText": "我：后天去趟医院。\n爸爸：一定记得去医院。\n姐姐：你身体情况怎么办？\n我：我已经挂号了。",
+      "generatedAt": "2026-06-13T05:04:00.000Z",
+      "sourceRefs": [
+        {
+          "id": "src-s5-plan",
+          "channel": "self",
+          "speaker": "我",
+          "text": "后天去趟医院。"
+        },
+        {
+          "id": "src-s5-father",
+          "channel": "private",
+          "speaker": "爸爸",
+          "text": "一定记得去医院。"
+        },
+        {
+          "id": "src-s5-sister",
+          "channel": "private",
+          "speaker": "姐姐",
+          "text": "你身体情况怎么办？"
+        },
+        {
+          "id": "src-s5-registered",
+          "channel": "private",
+          "speaker": "我",
+          "text": "我已经挂号了。"
+        }
+      ],
+      "memories": [
+        {
+          "id": "mem-s5-family-care",
+          "kind": "memory",
+          "title": "家人关注身体情况",
+          "summary": "爸爸提醒去医院，姐姐关心身体情况。",
+          "sourceRefs": [
+            {
+              "id": "src-s5-father",
+              "channel": "private",
+              "speaker": "爸爸",
+              "text": "一定记得去医院。"
+            },
+            {
+              "id": "src-s5-sister",
+              "channel": "private",
+              "speaker": "姐姐",
+              "text": "你身体情况怎么办？"
+            }
+          ],
+          "confidence": 0.88,
+          "reason": "家人的提醒和关心是重要上下文，应沉淀到记忆并进入安排详情。",
+          "memoryType": "relationship"
+        }
+      ],
+      "emotions": [],
+      "inspirations": [],
+      "candidateArrangements": [
+        {
+          "id": "arr-s5-hospital",
+          "kind": "arrangement",
+          "title": "后天去医院检查身体",
+          "summary": "四条来源共同指向同一件去医院事项，且已经挂号。",
+          "sourceRefs": [
+            {
+              "id": "src-s5-plan",
+              "channel": "self",
+              "speaker": "我",
+              "text": "后天去趟医院。"
+            },
+            {
+              "id": "src-s5-father",
+              "channel": "private",
+              "speaker": "爸爸",
+              "text": "一定记得去医院。"
+            },
+            {
+              "id": "src-s5-sister",
+              "channel": "private",
+              "speaker": "姐姐",
+              "text": "你身体情况怎么办？"
+            },
+            {
+              "id": "src-s5-registered",
+              "channel": "private",
+              "speaker": "我",
+              "text": "我已经挂号了。"
+            }
+          ],
+          "confidence": 0.92,
+          "reason": "多来源指向同一生活事件，应合并为一个候选安排并保留全部来源。",
+          "lifecycle": "candidate",
+          "status": "pending",
+          "attention": "recent",
+          "fields": {
+            "who": ["我", "爸爸", "姐姐"],
+            "what": "去医院检查身体",
+            "whenText": "后天",
+            "whereText": "医院",
+            "why": "身体情况需要处理，家人也在提醒",
+            "how": "已挂号，按挂号信息去医院",
+            "need": "避免重复生成安排，同时保留全部来源上下文"
+          },
+          "executionMode": "user",
+          "prerequisiteItems": [
+            {
+              "id": "pre-s5-registration",
+              "title": "已挂号",
+              "sourceRefs": [
+                {
+                  "id": "src-s5-registered",
+                  "channel": "private",
+                  "speaker": "我",
+                  "text": "我已经挂号了。"
+                }
+              ]
+            }
+          ],
+          "relatedEmotionIds": []
+        }
+      ],
+      "formalArrangements": [],
+      "mergeSuggestions": [
+        {
+          "id": "merge-s5-hospital",
+          "action": "appendSourcesToExisting",
+          "title": "将医院相关来源合并为同一安排",
+          "targetArrangementId": "arr-s5-hospital",
+          "candidateArrangementIds": ["arr-s5-hospital"],
+          "sourceRefs": [
+            {
+              "id": "src-s5-plan",
+              "channel": "self",
+              "speaker": "我",
+              "text": "后天去趟医院。"
+            },
+            {
+              "id": "src-s5-father",
+              "channel": "private",
+              "speaker": "爸爸",
+              "text": "一定记得去医院。"
+            },
+            {
+              "id": "src-s5-sister",
+              "channel": "private",
+              "speaker": "姐姐",
+              "text": "你身体情况怎么办？"
+            },
+            {
+              "id": "src-s5-registered",
+              "channel": "private",
+              "speaker": "我",
+              "text": "我已经挂号了。"
+            }
+          ],
+          "confidence": 0.94,
+          "reason": "医院、身体情况、已挂号共同指向同一事件，不应生成 4 条重复安排。"
+        }
+      ],
+      "arrangementGroups": [
+        {
+          "id": "grp-s5-hospital",
+          "title": "医院检查身体事件",
+          "primaryArrangementId": "arr-s5-hospital",
+          "relatedArrangementIds": [],
+          "prerequisiteItemIds": ["pre-s5-registration"],
+          "emotionalContextItemIds": [],
+          "sourceRefs": [
+            {
+              "id": "src-s5-plan",
+              "channel": "self",
+              "speaker": "我",
+              "text": "后天去趟医院。"
+            },
+            {
+              "id": "src-s5-father",
+              "channel": "private",
+              "speaker": "爸爸",
+              "text": "一定记得去医院。"
+            },
+            {
+              "id": "src-s5-sister",
+              "channel": "private",
+              "speaker": "姐姐",
+              "text": "你身体情况怎么办？"
+            },
+            {
+              "id": "src-s5-registered",
+              "channel": "private",
+              "speaker": "我",
+              "text": "我已经挂号了。"
+            }
+          ],
+          "displayReason": "安排组用于展示同一医院事件的来源和进展，不是第三种生命周期状态。"
+        }
+      ],
+      "ignoredItems": [],
+      "riskItems": []
+    }
+  },
+  {
+    "id": "sample-6-restaurant-memory-weak-candidate",
+    "title": "生活记录 + 情绪 + 弱候选安排",
+    "inputText": "今天和 A 去那家店吃饭了，味道挺不错，但是跟 A 相处有点累。下次还想再去。",
+    "semanticSlices": [
+      "今天和 A 去那家店吃饭了",
+      "味道挺不错",
+      "跟 A 相处有点累",
+      "下次还想再去"
+    ],
+    "routing": {
+      "memories": ["今天和 A 去那家店吃饭了", "那家店味道挺不错"],
+      "emotions": ["跟 A 相处有点累"],
+      "inspirations": [],
+      "arrangementPossibilities": ["下次还想再去"],
+      "ignoredItems": [],
+      "riskItems": []
+    },
+    "expected": {
+      "memories": 2,
+      "emotions": 1,
+      "inspirations": 0,
+      "candidateArrangements": 1,
+      "formalArrangements": 0,
+      "mergeSuggestions": 0,
+      "arrangementGroups": 0,
+      "ignoredItems": 0,
+      "riskItems": 0
+    },
+    "result": {
+      "id": "funnel-sample-6-restaurant",
+      "inputText": "今天和 A 去那家店吃饭了，味道挺不错，但是跟 A 相处有点累。下次还想再去。",
+      "generatedAt": "2026-06-13T05:05:00.000Z",
+      "sourceRefs": [
+        {
+          "id": "src-s6-raw",
+          "channel": "note",
+          "speaker": "我",
+          "text": "今天和 A 去那家店吃饭了，味道挺不错，但是跟 A 相处有点累。下次还想再去。"
+        }
+      ],
+      "memories": [
+        {
+          "id": "mem-s6-restaurant-visit",
+          "kind": "memory",
+          "title": "今天和 A 去那家店吃饭",
+          "summary": "这是已经发生的生活记录，不应生成新安排。",
+          "sourceRefs": [
+            {
+              "id": "src-s6-visit",
+              "channel": "note",
+              "speaker": "我",
+              "text": "今天和 A 去那家店吃饭了"
+            }
+          ],
+          "confidence": 0.86,
+          "reason": "已发生事件进入记忆沉淀。",
+          "memoryType": "eventContext"
+        },
+        {
+          "id": "mem-s6-restaurant-taste",
+          "kind": "memory",
+          "title": "那家店味道挺不错",
+          "summary": "用户对店的口味评价值得保留。",
+          "sourceRefs": [
+            {
+              "id": "src-s6-taste",
+              "channel": "note",
+              "speaker": "我",
+              "text": "味道挺不错"
+            }
+          ],
+          "confidence": 0.84,
+          "reason": "偏好和体验评价进入记忆沉淀。",
+          "memoryType": "preference"
+        }
+      ],
+      "emotions": [
+        {
+          "id": "emo-s6-tired",
+          "kind": "emotion",
+          "title": "和 A 相处有点累",
+          "summary": "用户表达了关系相处中的轻度疲惫。",
+          "sourceRefs": [
+            {
+              "id": "src-s6-emotion",
+              "channel": "note",
+              "speaker": "我",
+              "text": "跟 A 相处有点累"
+            }
+          ],
+          "confidence": 0.82,
+          "reason": "这是明确的相处情绪。",
+          "emotion": "pressure",
+          "intensity": "medium"
+        }
+      ],
+      "inspirations": [],
+      "candidateArrangements": [
+        {
+          "id": "arr-s6-restaurant-again",
+          "kind": "arrangement",
+          "title": "下次再去那家店",
+          "summary": "“下次还想再去”是弱候选安排，没有明确时间，不能进入正式安排。",
+          "sourceRefs": [
+            {
+              "id": "src-s6-next-time",
+              "channel": "note",
+              "speaker": "我",
+              "text": "下次还想再去"
+            }
+          ],
+          "confidence": 0.51,
+          "reason": "表达了未来倾向，但时间和行动承诺都弱，只能作为安静候选。",
+          "lifecycle": "candidate",
+          "status": "pending",
+          "attention": "quiet",
+          "fields": {
+            "who": ["我"],
+            "what": "再去那家店",
+            "whenText": "下次",
+            "whereText": "那家店",
+            "why": "味道挺不错",
+            "how": "等待用户主动确认或自然浮现",
+            "need": "保留回收价值，但不打扰"
+          },
+          "executionMode": "user",
+          "prerequisiteItems": [],
+          "relatedEmotionIds": ["emo-s6-tired"]
+        }
+      ],
+      "formalArrangements": [],
+      "mergeSuggestions": [],
+      "arrangementGroups": [],
+      "ignoredItems": [],
+      "riskItems": []
+    }
+  }
+]

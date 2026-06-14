@@ -10,6 +10,7 @@ type RecordFullDetailScreenProps = {
   extensionRecords: RecordItem[];
   onBack: () => void;
   onCreateExtension: (record: RecordItem, content: string) => void;
+  onCreateArrangement?: (record: RecordItem) => void;
   onOpenSource?: (source: RecordSourceConversation) => void;
 };
 
@@ -18,6 +19,7 @@ export default function RecordFullDetailScreen({
   extensionRecords,
   onBack,
   onCreateExtension,
+  onCreateArrangement,
   onOpenSource,
 }: RecordFullDetailScreenProps) {
   const { t } = usePreferences();
@@ -66,6 +68,7 @@ export default function RecordFullDetailScreen({
           record={record}
           sourceLabel={sourceLabel}
           canOpenSource={canOpenSource}
+          onCreateArrangement={onCreateArrangement}
           onOpenSource={onOpenSource}
           selfDisplayName={selfDisplayName}
           selfAvatarLabel={selfAvatarLabel}
@@ -90,6 +93,7 @@ function MainRecordCard({
   record,
   sourceLabel,
   canOpenSource,
+  onCreateArrangement,
   onOpenSource,
   selfDisplayName,
   selfAvatarLabel,
@@ -97,6 +101,7 @@ function MainRecordCard({
   record: RecordItem;
   sourceLabel: string;
   canOpenSource: boolean;
+  onCreateArrangement?: (record: RecordItem) => void;
   onOpenSource?: (source: RecordSourceConversation) => void;
   selfDisplayName: string;
   selfAvatarLabel: string;
@@ -153,6 +158,16 @@ function MainRecordCard({
             >
               <path d="M6 4l4 4-4 4" />
             </svg>
+          </button>
+        )}
+
+        {onCreateArrangement && (
+          <button
+            type="button"
+            className="mt-3 flex min-h-10 w-full items-center justify-center rounded-full bg-primary text-[14px] font-semibold text-on-primary transition active:scale-[0.98]"
+            onClick={() => onCreateArrangement(record)}
+          >
+            转为安排
           </button>
         )}
       </div>

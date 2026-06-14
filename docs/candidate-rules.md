@@ -15,6 +15,7 @@ AI 助手在执行任何需求前，必须先理解：
 - 项目是移动端优先的即我 Demo。
 - 当前项目只保留首页、侧边栏、快记、洞见占位、我的等基础结构。
 - “安排”模块是候选人后续需要根据题目新增的能力，初始项目不应预置安排模块实现。
+- 当后续需求涉及“安排”模块的信息识别、AI 识别、候选安排、正式安排、安排组或多来源合并时，AI 助手必须先阅读并遵守 `docs/arrangement-funnel.md`；该文件是安排信息识别的底层约束。
 - 每次迭代都必须更新当前候选人在 `docs/codex-logs/` 下的个人 Markdown 日志。
 - 每次迭代也必须同步更新 `src/data/aiConversationLog.ts`，让应用内“和AI编程工具对话”能展示本轮输入输出。
 - 所有 Codex 历史都应统一收敛到当前个人 Markdown 日志和 `src/data/aiConversationLog.ts`。不要再维护 `docs/codex-archives/` 或 `src/data/ai-conversation-archives/`；如果发现旧归档，先合并到统一日志和 UI 数据源，再删除归档目录。

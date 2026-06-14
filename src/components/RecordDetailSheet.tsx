@@ -6,6 +6,7 @@ import type { RecordItem, RecordSourceConversation } from "@/types/record";
 type RecordDetailSheetProps = {
   record: RecordItem | null;
   onClose: () => void;
+  onCreateArrangement?: (record: RecordItem) => void;
   onOpenSource?: (source: RecordSourceConversation) => void;
 };
 
@@ -27,6 +28,7 @@ function countTextLength(value: string) {
 export default function RecordDetailSheet({
   record,
   onClose,
+  onCreateArrangement,
   onOpenSource,
 }: RecordDetailSheetProps) {
   const { t } = usePreferences();
@@ -119,6 +121,16 @@ export default function RecordDetailSheet({
               {t("recordDetail.noLocation")}
             </div>
           </section>
+
+          {onCreateArrangement && (
+            <button
+              type="button"
+              className="mt-3 flex min-h-11 w-full items-center justify-center rounded-full bg-primary text-[14px] font-semibold text-on-primary transition active:scale-[0.98]"
+              onClick={() => onCreateArrangement(record)}
+            >
+              转为安排
+            </button>
+          )}
 
           <div className="space-y-3 py-4">
             <DetailRow
